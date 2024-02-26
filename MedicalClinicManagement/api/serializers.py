@@ -2,6 +2,29 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import UserProfile, Medicine, Schedule, PatientAppointment
+from oauth2_provider.models import Application
+
+class UserSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+    scope = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'avatar', 'scope']
+
+    def get_avatar(self, obj):
+        # Lấy thông tin avatar từ UserProfile nếu có
+        if hasattr(obj, 'userprofile') and obj.userprofile.avatar:
+            return obj.userprofile.avatar.url
+        return None
+
+    def get_scope(self, obj):
+        # Trả về scope của user dựa trên thông tin OAuth2
+        try:
+            application = Application.objects.get(user=obj)
+            return application.name
+        except Application.DoesNotExist:
+            return None
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

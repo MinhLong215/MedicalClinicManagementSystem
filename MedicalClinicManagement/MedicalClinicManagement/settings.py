@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-7=fa6#+z8-ou57e%rfvd66lv041uh!ugt0k5gu)jsb3uz6^x^b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2', '127.0.0.1']
 
 
 # Application definition
@@ -41,35 +41,30 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
     'rest_framework',
-    'rest_framework.authtoken',
     'oauth2_provider'
 ]
 
 # Cấu hình OAuth2
 OAUTH2_PROVIDER = {
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'},
+   'SCOPES': {
+        'admin': 'Admin Scope Description',
+        'doctor': 'Doctor Scope Description',
+        'nurse': 'Nurse Scope Description',
+        'patient': 'Patient Scope Description',
+    },
     'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
 }
 
+
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-    ],
+    )
 }
 
-# settings.py
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=2),  # Đặt thời gian sống của Access Token là 2 ngày
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=2),  # Đặt thời gian sống của Refresh Token là 2 ngày
-}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,8 +73,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'MedicalClinicManagement.urls'
