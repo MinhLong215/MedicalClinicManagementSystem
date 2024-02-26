@@ -7,12 +7,12 @@ import UserManagement from "./components/Admin/UserManagement/UserManagement";
 import Login from "./components/User/Login";
 import API, { endpoints } from "./configs/API";
 import React, { useReducer } from 'react'
-import Lesson from "./components/Lesson/Lesson";
-import LessonDetails from "./components/Lesson/LessonDetails";
 import MyContext from "./configs/MyContext";
 import MyUserReducer from "./reducers/MyUserReducer";
 import Logout from "./components/User/Logout";
 import Register from "./components/User/Register";
+import Schedule from "./components/Admin/Schedule/Schedule";
+import SchedulePatient from "./components/Patient/Schedule/Schedule";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,23 +22,34 @@ const App = () => {
   return (
     <MyContext.Provider value={[user, dispatch]}>
       <NavigationContainer>
-        <Drawer.Navigator drawerContent={MyDrawerItem} screenOptions={{headerRight: Logout}}>
-          {/* <Drawer.Screen name="Lesson" component={Lesson} options={{title: "Bài học", drawerItemStyle: {display: "none"}}} />
-          <Drawer.Screen name="LessonDetails" component={LessonDetails} options={{title: "Chi tiết bài học", drawerItemStyle: {display: "none"}}} />
-           */}
-          {user===null?<>
-            <Drawer.Screen name="Loin" options={{title: 'Đăng nhập'}} component={Login} />
-            <Drawer.Screen name="Register" options={{title: 'Đăng ký'}} component={Register} />
-          </>:<>
-            <Drawer.Screen name="Home" component={Home} options={{title: 'Thuốc'}} />
-            <Drawer.Screen name="UserManagement" component={UserManagement} options={{title: 'Quản lý tài khoản'}} />
+        <Drawer.Navigator drawerContent={MyDrawerItem} screenOptions={{ headerRight: Logout }}>
+          {user === null ? (
+            <>
+              <Drawer.Screen name="Login" options={{ title: 'Đăng nhập' }} component={Login} />
+              <Drawer.Screen name="Register" options={{ title: 'Đăng ký' }} component={Register} />
+            </>
+          ) : (
+            <>
+              {user === "Admin Scope Description" && (
+                <>
+                  <Drawer.Screen name="Home" component={Home} options={{ title: 'Thuốc' }} />
+                  <Drawer.Screen name="UserManagement" component={UserManagement} options={{ title: 'Quản lý tài khoản' }} />
+                  <Drawer.Screen name="Schedule" component={Schedule} options={{ title: 'Quản lý lịch trực' }} />
+                </>
+              )}
+              {user === "Patient Scope Description" && (
+                <>
+                  <Drawer.Screen name="SchedulePatient" component={SchedulePatient} options={{ title: 'Đặt lịch khám bệnh' }} />
+                </>
+              )}
 
-            {/* <Drawer.Screen name={user.username} component={Home} /> */}
-          </>}
-          
+              <Drawer.Screen name="Profile" component={Home} options={{ title: user }} />
+            </>
+          )}
         </Drawer.Navigator>
       </NavigationContainer>
     </MyContext.Provider>
+
   )
 }
 
@@ -46,26 +57,13 @@ const MyDrawerItem = (props) => {
   const [categories, setCategories] = React.useState(null);
 
   React.useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        let res = await API.get(endpoints['categories']);
-        setCategories(res.data);
-      } catch (ex) {
-        setCategories([])
-        console.error(ex);
-      }
-    }
-
-    loadCategories();
 
   }, []);
 
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      {categories===null?<ActivityIndicator />:<>
-        {categories.map(c => <DrawerItem key={c.id} label={c.name} onPress={() => props.navigation.navigate("Home", {"cateId": c.id})} />)}
-      </>}
+
     </DrawerContentScrollView>
   );
 }

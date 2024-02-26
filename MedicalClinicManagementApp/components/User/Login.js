@@ -28,15 +28,33 @@ const Login = ({ navigation }) => {
             console.log(response.data.scope);
            
             if(response.data.scope == "Admin Scope Description"){
-                await AsyncStorage.setItem("access-token", response.data.access_token)
-                await AsyncStorage.setItem("scope", response.data.scope)
-                let user = await authApi(response.data.access_token).get(endpoints['current-user']);
-                console.log(user.data);
+                await AsyncStorage.setItem("access-token", response.data.access_token);
+                await AsyncStorage.setItem("scope", response.data.scope);
+
+                // let user = await authApi(response.data.access_token).get(endpoints['current-user']);
+                // await AsyncStorage.setItem("user", user.data.id);
+                // console.log(response.data.scope);
+                
                 dispatch({
                     type: "login",
-                    payload: user.data
+                    payload: response.data.scope
                 });
                 navigation.navigate("Home");
+            }
+
+            if(response.data.scope == "Patient Scope Description"){
+                await AsyncStorage.setItem("access-token", response.data.access_token);
+                await AsyncStorage.setItem("scope", response.data.scope);
+
+                // let user = await authApi(response.data.access_token).get(endpoints['current-user']);
+                // await AsyncStorage.setItem("user", user.data.id);
+                // console.log(response.data.scope);
+
+                dispatch({
+                    type: "login",
+                    payload: response.data.scope
+                });
+                navigation.navigate("SchedulePatient");
             }
 
            

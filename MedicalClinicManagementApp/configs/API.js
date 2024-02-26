@@ -12,7 +12,8 @@ export const endpoints = {
     'medicines': '/medicines/',
     'medicinesCreate': '/medicines/create/',
     'users': '/users/',
-
+    'schedules': '/schedules/',
+    'appointments': '/appointments/',
     'add-comment': (lessonId) => `/lessons/${lessonId}/comments/`
 }
 

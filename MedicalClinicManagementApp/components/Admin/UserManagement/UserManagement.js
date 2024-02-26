@@ -23,7 +23,7 @@ const UserManagement = ({ route, navigation }) => {
     const [updatedScope, setUpdatedScope] = useState("");
     const [newScope, setNewScope] = useState("");
 
-    
+
     const loadUsers = async () => {
         try {
             const response = await API.get(endpoints.users);
@@ -39,7 +39,7 @@ const UserManagement = ({ route, navigation }) => {
 
     const createUsers = async () => {
         try {
-            const response = await  API.post(endpoints['register'], {
+            const response = await API.post(endpoints['register'], {
                 username: newUsername,
                 password: newPassword,
                 first_name: newFirstName,
@@ -54,6 +54,10 @@ const UserManagement = ({ route, navigation }) => {
             console.error("Error creating Users:", error);
         }
     };
+
+    const cancelCreate = async () => {
+        setShowCreateUser(false);
+    }
 
     const updateUsers = async (id, newData) => {
         try {
@@ -113,7 +117,7 @@ const UserManagement = ({ route, navigation }) => {
                                             setUpdatedMedicinePrice(user.price.toString());
                                         }}
                                     /> */}
-                                    <Button title="Xóa" onPress={() => deleteUsers(user.id)} />
+                                    <TouchableOpacity style={styles.buttonDelete} onPress={() => deleteUsers(user.id)}><Text style={styles.deleteButtonText}>Xóa</Text></TouchableOpacity>
                                 </View>
                             </View>
                         ))}
@@ -160,10 +164,20 @@ const UserManagement = ({ route, navigation }) => {
                         placeholder="Phân quyền"
                         style={styles.input}
                     />
-                    <Button
-                        title="Tạo mới"
-                        onPress={createUsers}
-                    />
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            style={styles.createButton}
+                            onPress={createUsers}
+                        >
+                            <Text style={styles.buttonText}>Tạo mới</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.cancelButton}
+                            onPress={cancelCreate}
+                        >
+                            <Text style={styles.buttonText}>Hủy</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )}
 
@@ -229,6 +243,43 @@ const UserManagement = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    buttonDelete: {
+        backgroundColor: "red",
+        borderRadius: 5,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    deleteButtonText: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    createButton: {
+        backgroundColor: 'green',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        width: 150,
+        alignItems: 'center',
+    },
+    cancelButton: {
+        backgroundColor: 'red',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        width: 150,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
     updateMedical: {
         marginBottom: 5
     },
